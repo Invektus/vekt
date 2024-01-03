@@ -18,7 +18,7 @@ function LineGraph({username}) {
   })
 
 
-/** 
+/**
  * fetches all data from database and returns it.
  * Then iterates through the data and pushes it to sugarLevel array and sugarDate array
  * then sets the userData state
@@ -47,8 +47,8 @@ function LineGraph({username}) {
           ]
         }
         setData(chartData)
-      })
-    }, [])
+      }, [userData])
+    })
 
 /** Renders a line graph by passing in userData into a Line component from react chart js
  * */

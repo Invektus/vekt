@@ -32,9 +32,7 @@ function Homepage() {
   const usernameCookie = getCookie('username')
   console.log(usernameCookie)
   const cards = [];
-  // for (let i = 0; i < 3; i++) {
-  //   cards.push(<InfoCard key={crypto.randomUUID()}/>);
-  // }
+
   /**set buttonPopup to false */
   const [buttonPopup, setButtonPopup] = useState(false);
   /**set data to empty array */
@@ -71,7 +69,7 @@ function Homepage() {
     })
     .catch(error => console.log('Error displaying entries on homepage'))
     /**removed data from [data] - so browser does constantly render */
-  },[])
+  },[data])
 
   // const navigate = useNavigate();
 
@@ -94,7 +92,7 @@ function Homepage() {
     return null;
   }
 
-  /**deletes the account */
+  /**deletes the data point entry */
   const handleDelete = (id) => {
     fetch(`http://localhost:3000/api/delete/${id}`, {
       method: 'DELETE',
@@ -171,6 +169,7 @@ function Homepage() {
         <button id='newEntry-btn' onClick={() => setButtonPopup(true)}>New Entry</button>
       </div>
       {/* <div className='card-container'>{cards}</div> */}
+      {/* button to add new entry */}
       <FoodLog trigger={buttonPopup} setTrigger={setButtonPopup} getCookie={getCookie}></FoodLog>
       <div className='entriesContainer'>
         {data.map(item => (
@@ -186,6 +185,7 @@ function Homepage() {
             </div>
           </div>
         ))}
+              {/* pop up to add or edit data entry log */}
               <Modal isOpen={open} onClose={handleClose} onSubmit={handleSubmit}>
                   <div>
                     <form>

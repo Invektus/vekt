@@ -40,7 +40,7 @@ function BloodPressureGraph({username}) {
 					}
 				}
 				/**
-				 * creates a chartData object with labels and datasets properties, which will be used to update the 
+				 * creates a chartData object with labels and datasets properties, which will be used to update the
 				 * state variable.
 				 */
 				const chartData = {
@@ -48,18 +48,16 @@ function BloodPressureGraph({username}) {
 					datasets: [
 						{label: 'Systolic Blood Pressure',
 						data: systolicPressures,},
-						{
-							label: 'Diabolic Blood Pressure',
-							data: diabolicPressures,
-						}
+						{label: 'Diabolic Blood Pressure',
+						data: diabolicPressures,}
 					]
 				}
 			setData(chartData);
 			})
-	}, [])
-/** 
- * component returns a div containing a Line chart from react-chartjs-2, and it passes the 
- * userData as the data prop for the chart. 
+	}, [userData])
+/**
+ * component returns a div containing a Line chart from react-chartjs-2, and it passes the
+ * userData as the data prop for the chart.
  * */
   return (
     <div style={{ width: 700 }}>
