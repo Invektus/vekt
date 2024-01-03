@@ -11,7 +11,7 @@ import Quotes from './Quotes'
 
 
 function Homepage() {
-  
+
   function getCookie(name) {
     /**place the data into an array */
     const cookies = document.cookie.split('; ');
@@ -48,7 +48,7 @@ function Homepage() {
     .then(data => {
       const array = []
       /**iterate through the data */
-      data.forEach(el => { 
+      data.forEach(el => {
       /**check if the username makes the usernameCookie */
         if(el.username === usernameCookie){
           const dateObject = new Date(el.date);
@@ -62,20 +62,17 @@ function Homepage() {
             // const formattedDate = dateObject.toLocaleString('en-US', options);
             // return {...item, date: formattedDate}
           // })
-          
+
         }
-      
+
       })
       console.log(array)
       setData(array)
     })
     .catch(error => console.log('Error displaying entries on homepage'))
-<<<<<<< HEAD
     /**removed data from [data] - so browser does constantly render */
-=======
->>>>>>> dev
   },[])
-  
+
   // const navigate = useNavigate();
 
   // const handleClick = () => {
@@ -93,7 +90,7 @@ function Homepage() {
         return decodeURIComponent(value);
       }
     }
-  
+
     return null;
   }
 
