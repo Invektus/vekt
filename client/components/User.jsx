@@ -19,7 +19,7 @@ function User() {
   function getCookie(name) {
     /**place the data into an array */
     const cookies = document.cookie.split('; ');
-    console.log('COOKIES', cookies)
+    // console.log('COOKIES', cookies)
     /**iterate through the cookies array */
     for (const cookie of cookies) {
       /**checks if the array contains '=' and removes it*/
@@ -34,7 +34,7 @@ function User() {
   }
 
   const usernameCookie = getCookie('username')
-  console.log(usernameCookie)
+  // console.log(usernameCookie)
   const getUserInfo = async () => {
     try {
       const requestOptions = {
@@ -44,7 +44,7 @@ function User() {
         },
         body: JSON.stringify({ username: usernameCookie }),
       };
-      console.log('getting user information for ', usernameCookie);
+      // console.log('getting user information for ', usernameCookie);
 
       const response = await fetch('http://localhost:3000/api/getUser', requestOptions);
       const data = await response.json();
