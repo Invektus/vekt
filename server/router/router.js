@@ -27,6 +27,10 @@ router.post('/getUser', controller.getUser, (req, res) => {
   return res.status(200).json(res.locals.user);
 })
 
+router.get('/getOptedUsers', controller.getOptedUsers, (req, res) => {
+  return res.status(200).json(res.locals.users);
+})
+
 /** Handle POST request to 'http://localhost:3000/api/signup'
  * Request body should have username and password
  * Request body is sent to createUser middleware
