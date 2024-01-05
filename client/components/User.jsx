@@ -65,7 +65,9 @@ function User() {
   }, []);
 
   /** event handler to send test message to user's phone */
-  function textButtonChange(event) {
+  function textButtonChange(e) {
+    e.preventDefault();
+    console.log('trying to send text');
     const message = {
       to: userInfo.phone,
       body: `Hi ${userInfo.firstName}, you've opted in to Invektus daily reminders!`,
@@ -125,8 +127,7 @@ function User() {
   };
 
   const handleCheck = (e) => {
-
-    console.log('new optIn ',!userInfo.optIn);
+    console.log('new optIn ', !userInfo.optIn);
     setUserInfo((prevUserInfo) => ({
       ...prevUserInfo,
       optIn: !userInfo.optIn,
@@ -217,7 +218,7 @@ function User() {
           Opt in to daily text messages?
         </label>
         <br />
-        <button className='userSaveBtn' onChange={textButtonChange}>
+        <button className='testTextBtn' type='button' onClick={textButtonChange}>
           Send Test Text
         </button>
         <br></br>
