@@ -7,206 +7,230 @@ const controller = {};
 
 /** create user middleware
  * We should add first name and last name (and other info) to user collection
-*/
+ */
 controller.createUser = async (req, res, next) => {
-    /** get usernmae and password from front end */
-    const { firstName, lastName, username, password, phone, email } = req.body
-    /** check that username and password were sent from front end
-     * otherwise return error
-     */
-    if (!username || !password || !firstName || !lastName || !phone || !email ) {
-        return next({
-            log: 'Error in createUser middleware',
-            status: 400,
-            error: 'Error in creating user, please follow rules for username and password'
-        })
-    }
-    /** asynchronously create new user in db
-     * sending username, password
-     * getting back newUser entry
-     */
-    try {
-        const newUser = await User.create({
-            firstName: firstName,
-            lastName: lastName,
-            username: username,
-            password: password,
-            phone: phone,
-            email: email,
-        })
-        console.log('got the newUser')
-        /** sending user id back to router.js */
-        res.locals.newUser = newUser._id;
-        return next();
-    } catch (error) { return next({
-        log: 'Error in createUser middleware',
-            status: 500,
-            error: 'Error in creating user'
-        })
-    }
-}
+  /** get usernmae and password from front end */
+  const { firstName, lastName, username, password, phone, email } = req.body;
+  /** check that username and password were sent from front end
+   * otherwise return error
+   */
+  if (!username || !password || !firstName || !lastName || !phone || !email) {
+    return next({
+      log: 'Error in createUser middleware',
+      status: 400,
+      error:
+        'Error in creating user, please follow rules for username and password',
+    });
+  }
+  /** asynchronously create new user in db
+   * sending username, password
+   * getting back newUser entry
+   */
+  try {
+    const newUser = await User.create({
+      firstName: firstName,
+      lastName: lastName,
+      username: username,
+      password: password,
+      phone: phone,
+      email: email,
+    });
+    console.log('got the newUser');
+    /** sending user id back to router.js */
+    res.locals.newUser = newUser._id;
+    return next();
+  } catch (error) {
+    return next({
+      log: 'Error in createUser middleware',
+      status: 500,
+      error: 'Error in creating user',
+    });
+  }
+};
 
 /** verify user middleware */
 controller.verifyUser = async (req, res, next) => {
-     /** get usernmae and password from front end */
-    const { username, password } = req.body
-    /** asynchronously query database to find username and password
-     * and getting back verified user entry */
-    try {
-        const userConfirmed = await User.findOne({ username, password })
-        if (userConfirmed) {
-            /** sending verified user id to router.js */
-            res.locals.id = userConfirmed._id;
-            return next();
-        }
-    } catch (error) {
-        return next({
-            log: 'Error in getUser middleware',
-            status: 500,
-            error: 'Error in getting user'
-        })
+  /** get usernmae and password from front end */
+  const { username, password } = req.body;
+  /** asynchronously query database to find username and password
+   * and getting back verified user entry */
+  try {
+    const userConfirmed = await User.findOne({ username, password });
+    if (userConfirmed) {
+      /** sending verified user id to router.js */
+      res.locals.id = userConfirmed._id;
+      return next();
     }
-}
+  } catch (error) {
+    return next({
+      log: 'Error in getUser middleware',
+      status: 500,
+      error: 'Error in getting user',
+    });
+  }
+};
 
-controller.getUser = async(req, res, next) => {
-    const {username} = req.body;
-    try{
-        const data = await User.findOne({username})
-        if (data) {
-            res.locals.user = data;
-            return next();
-        }
-    } catch (error) {
-        return next({
-            log: 'Error in getSugar middleware',
-            status: 500,
-            error: 'Error in retreiving sugar levels'
-        })
+controller.getUser = async (req, res, next) => {
+  const { username } = req.body;
+  try {
+    const data = await User.findOne({ username });
+    if (data) {
+      res.locals.user = data;
+      return next();
     }
-}
+  } catch (error) {
+    return next({
+      log: 'Error in getUser middleware',
+      status: 500,
+      error: 'Error in retreiving user info',
+    });
+  }
+};
+
+controller.getOptedUsers = async (req, res, next) => {
+  try {
+    const data = await User.find({ optIn: true });
+    if (data) {
+      res.locals.users = data;
+      return next();
+    }
+  } catch (error) {
+    return next({
+      log: 'Error in getSugar middleware',
+      status: 500,
+      error: 'Error in retreiving sugar levels',
+    });
+  }
+};
 
 /** updateUser middleware */
 controller.updateUser = async (req, res, next) => {
-    /** get usernmae and password from front end */
-    const { firstName, lastName, username, phone, email } = req.body
-    /** deleted this bc a user should be able to change their information
-     */
-    // if (!firstName || !lastName || !username || !password || !phone || !email ) {
-    //     return next({
-    //         log: 'Error in updating user, please follow rules for username and password',
-    //         status: 400,
-    //         error: 'Error in updating user, please follow rules for username and password'
-    //     })
-    // }
-    /** asynchronously update new user in db
-     * sending username, password
-     * getting back newUser entry
-     */
-    try {
-        console.log('attempting update for ', username, ' with ', firstName, lastName, phone, email);
-        await User.updateOne(
-            {username},
-            {$set: {firstName, lastName, phone, email}},
-            );
-        const updatedUser = await User.findOne({username})
-        if (updatedUser) {
-            res.locals.user = updatedUser;
-            console.log('updated the user info for ', username);
-            return next();
-        }    
-        
-        /** sending user id back to router.js */
-        // res.locals.user = updatedUser;
+  /** get usernmae and password from front end */
+  const { firstName, lastName, username, phone, email, optIn } = req.body;
+  /** deleted this bc a user should be able to change their information
+   */
+  // if (!firstName || !lastName || !username || !password || !phone || !email ) {
+  //     return next({
+  //         log: 'Error in updating user, please follow rules for username and password',
+  //         status: 400,
+  //         error: 'Error in updating user, please follow rules for username and password'
+  //     })
+  // }
+  /** asynchronously update new user in db
+   * sending username, password
+   * getting back newUser entry
+   */
+  try {
+    console.log(
+      'attempting update for ',
+      username,
+      ' with ',
+      firstName,
+      lastName,
+      phone,
+      email,
+      optIn
+    );
+    await User.updateOne(
+      { username },
+      { $set: { firstName, lastName, phone, email, optIn } }
+    );
+    const updatedUser = await User.findOne({ username });
+    if (updatedUser) {
+      res.locals.user = updatedUser;
+      console.log('updated the user info for ', username);
+      return next();
+    }
 
-        return next();
-    } catch (error) { return next ({
-        log: 'Error in updateUser middleware',
-            status: 500,
-            error: 'Error in updating user'
-        })
-    };
-}
+    /** sending user id back to router.js */
+    // res.locals.user = updatedUser;
+
+    return next();
+  } catch (error) {
+    return next({
+      log: 'Error in updateUser middleware',
+      status: 500,
+      error: 'Error in updating user',
+    });
+  }
+};
 
 /** getInfo middleware */
-controller.getInfo = async (req,res,next) => {
-    /** query "Info" collection of database, send back ALL data */
-    try{
-        const data = await Info.find({})
-        if (data) {
-            res.locals.data = data;
-            return next();
-        }
-    } catch (error) {
-        return next({
-            log: 'Error in getSugar middleware',
-            status: 500,
-            error: 'Error in retreiving sugar levels'
-        })
+controller.getInfo = async (req, res, next) => {
+  /** query "Info" collection of database, send back ALL data */
+  try {
+    const data = await Info.find({});
+    if (data) {
+      res.locals.data = data;
+      return next();
     }
-}
-
+  } catch (error) {
+    return next({
+      log: 'Error in getSugar middleware',
+      status: 500,
+      error: 'Error in retreiving sugar levels',
+    });
+  }
+};
 
 /** createEntry middleware*/
 controller.createEntry = async (req, res, next) => {
-    /** get username, bloodSugar, sysPressure, and diaPressure from front end */
-    const { username, bloodSugar, sysPressure, diaPressure } = req.body
-    /** asynchronously create document in "Info" collection */
-    try {
-        const newEntry = await Info.create({
-            username,
-            bloodSugar,
-            sysPressure,
-            diaPressure,
-        })
-        console.log('created entry')
-        /** send id of document back to router.js */
-        res.locals.entry = newEntry._id;
-        return next();
-    } catch (error) { return next({
-        log: 'Error in createEntry middleware',
-            status: 500,
-            error: 'Error in creating entry'
-        })
-    }
-
-}
+  /** get username, bloodSugar, sysPressure, and diaPressure from front end */
+  const { username, bloodSugar, sysPressure, diaPressure } = req.body;
+  /** asynchronously create document in "Info" collection */
+  try {
+    const newEntry = await Info.create({
+      username,
+      bloodSugar,
+      sysPressure,
+      diaPressure,
+    });
+    console.log('created entry');
+    /** send id of document back to router.js */
+    res.locals.entry = newEntry._id;
+    return next();
+  } catch (error) {
+    return next({
+      log: 'Error in createEntry middleware',
+      status: 500,
+      error: 'Error in creating entry',
+    });
+  }
+};
 
 /** deleteEntry middleware */
 controller.deleteEntry = async (req, res, next) => {
-    /** get id of data point (document in Info) from front end */
-    const { id } = req.params;
-    console.log(req.params)
-    try {
-        await Info.findOneAndDelete({_id:id})
-        return next();
-    }
-    catch(error){
-        return next({
-            log: 'Error in deleteEntry middleware',
-            status: 500,
-            error: 'Error in deleting entry'
-        })
-    }
-}
+  /** get id of data point (document in Info) from front end */
+  const { id } = req.params;
+  console.log(req.params);
+  try {
+    await Info.findOneAndDelete({ _id: id });
+    return next();
+  } catch (error) {
+    return next({
+      log: 'Error in deleteEntry middleware',
+      status: 500,
+      error: 'Error in deleting entry',
+    });
+  }
+};
 
 /** updateEntry middleware */
 controller.updateEntry = async (req, res, next) => {
-    /** get bloodSugar, sysPressure, diaPressure and data point id from front end */
-    const { bloodSugar, sysPressure, diaPressure, id } = req.body;
-    /** query Info collection using id; update document's fields */
-    try {
-        await Info.updateOne({_id:id},{bloodSugar, sysPressure, diaPressure})
-        return next();
-    }
-    catch(error) {
-        return next({
-            log: 'Error in updateEntry middleware',
-            status: 500,
-            error: 'Error in updating entry'
-        })
-    }
-}
-
+  /** get bloodSugar, sysPressure, diaPressure and data point id from front end */
+  const { bloodSugar, sysPressure, diaPressure, id } = req.body;
+  /** query Info collection using id; update document's fields */
+  try {
+    await Info.updateOne({ _id: id }, { bloodSugar, sysPressure, diaPressure });
+    return next();
+  } catch (error) {
+    return next({
+      log: 'Error in updateEntry middleware',
+      status: 500,
+      error: 'Error in updating entry',
+    });
+  }
+};
 
 /***************Cookies and Sessions********************** */
 
@@ -225,7 +249,6 @@ controller.updateEntry = async (req, res, next) => {
 //         return next();
 //     })
 // }
-
 
 // controller.setCookie = (req, res, next) => {
 
@@ -250,12 +273,5 @@ controller.updateEntry = async (req, res, next) => {
 //     res.cookie('ssid', `${res.locals.id}`, { httpOnly: true })
 //     return next();
 // };
-
-
-
-
-
-
-
 
 module.exports = controller;
