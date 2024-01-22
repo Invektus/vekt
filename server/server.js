@@ -29,7 +29,7 @@ const twilio = require('twilio')(
 // const MONGO_URI = "mongodb+srv://ewong1217:kZFC34hkjGKrKbs5@cluster0.hukljwm.mongodb.net/?retryWrites=true&w=majority"
 
 
-// const MONGO_URI = 'mongodb+srv://cathyluong93:pE6Fqys2z94A9czA@cluster0.6zljii0.mongodb.net/?retryWrites=true&w=majority';
+// const MONGO_URI = "mongodb+srv://cathyluong93:pE6Fqys2z94A9czA@cluster0.6zljii0.mongodb.net/?retryWrites=true&w=majority";
 // const NODE_ENV = process.env.NODE_ENV || 'development';
 console.log("process.env.MONGO_URI", process.env.MONGO_URI)
 
